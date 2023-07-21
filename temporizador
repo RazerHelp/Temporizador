@@ -1,0 +1,43 @@
+*&---------------------------------------------------------------------*
+*& Report  Z_DAVI_RELOGINHO_TEMPORIZADOR
+*&---------------------------------------------------------------------*
+
+REPORT z_davi_reloginho_temporizador.
+
+DATA: tp_texto              TYPE string,
+      tp_valor              TYPE p DECIMALS 2,
+      tp_cont               TYPE i VALUE 1.
+
+START-OF-SELECTION.
+
+  DO 10 TIMES.
+    PERFORM f_progress_indicator_model_1 USING tp_cont 10.
+    tp_cont = tp_cont + 1.
+  ENDDO.
+
+*&---------------------------------------------------------------------*
+*&      Form  F_PROGRESS_INDICATOR_MODEL_1
+*&---------------------------------------------------------------------*
+FORM f_progress_indicator_model_1 USING utp_num1 utp_num2.
+
+  DATA: ltp_number1     TYPE string,
+        ltp_number2     TYPE string,
+        utp_percentage  TYPE p DECIMALS 2.
+
+  ltp_number1 = utp_num1.
+  ltp_number2 = utp_num2.
+
+  utp_percentage = utp_num1 * 10.
+
+  WAIT UP TO 1 SECONDS.
+
+  CONCATENATE 'Selecionando dados: '
+              ltp_number1 '/' ltp_number2
+              INTO tp_texto
+              RESPECTING BLANKS.
+
+  CALL FUNCTION 'SAPGUI_PROGRESS_INDICATOR'
+    EXPORTING
+      percentage = utp_percentage
+      text       = tp_texto.
+ENDFORM.                    " F_PROGRESS_INDICATOR_MODEL_1
